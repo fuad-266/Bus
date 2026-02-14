@@ -7,9 +7,9 @@ CREATE TABLE trip_ratings (
     rating DECIMAL(2, 1) NOT NULL CHECK (rating >= 1.0 AND rating <= 5.0),
     review TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_trip_ratings_trip FOREIGN KEY (trip_id) REFERENCES trips(id),
-    CONSTRAINT fk_trip_ratings_bus FOREIGN KEY (bus_id) REFERENCES buses(id),
-    CONSTRAINT fk_trip_ratings_user FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (trip_id) REFERENCES trips(id),
+    FOREIGN KEY (bus_id) REFERENCES buses(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 -- Create indexes for rating queries

@@ -9,8 +9,8 @@ CREATE TABLE trips (
     is_open BOOLEAN DEFAULT TRUE,
     operating_days JSONB,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_trips_route FOREIGN KEY (route_id) REFERENCES routes(id),
-    CONSTRAINT fk_trips_bus FOREIGN KEY (bus_id) REFERENCES buses(id)
+    FOREIGN KEY (route_id) REFERENCES routes(id),
+    FOREIGN KEY (bus_id) REFERENCES buses(id)
 );
 
 -- Create indexes for trip queries

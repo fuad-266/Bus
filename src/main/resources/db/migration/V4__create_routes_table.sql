@@ -6,8 +6,8 @@ CREATE TABLE routes (
     distance DECIMAL(10, 2),
     estimated_duration INTEGER,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_routes_departure_city FOREIGN KEY (departure_city_id) REFERENCES cities(id),
-    CONSTRAINT fk_routes_destination_city FOREIGN KEY (destination_city_id) REFERENCES cities(id)
+    FOREIGN KEY (departure_city_id) REFERENCES cities(id),
+    FOREIGN KEY (destination_city_id) REFERENCES cities(id)
 );
 
 -- Create indexes for route queries

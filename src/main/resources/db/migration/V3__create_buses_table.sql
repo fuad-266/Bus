@@ -9,7 +9,7 @@ CREATE TABLE buses (
     amenities JSONB,
     admin_user_id VARCHAR(36) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_buses_admin_user FOREIGN KEY (admin_user_id) REFERENCES users(id)
+    FOREIGN KEY (admin_user_id) REFERENCES users(id)
 );
 
 -- Create indexes for bus queries

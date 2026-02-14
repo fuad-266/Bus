@@ -23,14 +23,14 @@ This implementation plan breaks down the bus ticket booking website into increme
   - Set up logging configuration
   - _Requirements: Infrastructure setup_
 
-- [ ] 2. Database schema and migrations
+- [x] 2. Database schema and migrations
   - Create Flyway or Liquibase migration scripts for all tables (cities, buses, routes, trips, users, bookings, payments, refunds, trip_ratings)
   - Add database indexes as specified in design
   - Create database constraints and foreign keys
   - Test migrations on local PostgreSQL instance
   - _Requirements: All requirements (data foundation)_
 
-- [~] 3. Implement core domain models and entities
+- [-] 3. Implement core domain models and entities
   - Create JPA entities for City, Bus, Route, Trip, User, Booking, Payment, Refund, TripRating
   - Add proper annotations (@Entity, @Table, @Column, @Id, @GeneratedValue)
   - Define enums (BusType, UserRole, BookingStatus, PaymentStatus, SeatStatus)

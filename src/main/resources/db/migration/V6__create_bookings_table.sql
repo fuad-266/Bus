@@ -15,8 +15,8 @@ CREATE TABLE bookings (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     confirmed_at TIMESTAMP,
     cancelled_at TIMESTAMP,
-    CONSTRAINT fk_bookings_trip FOREIGN KEY (trip_id) REFERENCES trips(id),
-    CONSTRAINT fk_bookings_user FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (trip_id) REFERENCES trips(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 -- Create indexes for booking queries

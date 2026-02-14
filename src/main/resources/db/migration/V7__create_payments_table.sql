@@ -8,7 +8,7 @@ CREATE TABLE payments (
     transaction_id VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     completed_at TIMESTAMP,
-    CONSTRAINT fk_payments_booking FOREIGN KEY (booking_id) REFERENCES bookings(id)
+    FOREIGN KEY (booking_id) REFERENCES bookings(id)
 );
 
 -- Create indexes for payment queries

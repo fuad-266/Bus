@@ -8,8 +8,8 @@ CREATE TABLE refunds (
     reason TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     completed_at TIMESTAMP,
-    CONSTRAINT fk_refunds_payment FOREIGN KEY (payment_id) REFERENCES payments(id),
-    CONSTRAINT fk_refunds_booking FOREIGN KEY (booking_id) REFERENCES bookings(id)
+    FOREIGN KEY (payment_id) REFERENCES payments(id),
+    FOREIGN KEY (booking_id) REFERENCES bookings(id)
 );
 
 -- Create indexes for refund queries
