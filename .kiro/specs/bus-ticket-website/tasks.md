@@ -39,12 +39,12 @@ This implementation plan breaks down the bus ticket booking website into increme
   - _Requirements: All requirements (data models)_
 
 - [ ] 4. Implement authentication and authorization
-  - [-] 4.1 Create User entity and repository
+  - [x] 4.1 Create User entity and repository
     - Implement UserRepository with Spring Data JPA
     - Add methods for findByEmail, existsByEmail
     - _Requirements: 5.1, 5.2_
   
-  - [~] 4.2 Implement authentication service
+  - [-] 4.2 Implement authentication service
     - Create AuthenticationService with register, login, logout methods
     - Implement password hashing with BCrypt
     - Implement JWT token generation and validation
