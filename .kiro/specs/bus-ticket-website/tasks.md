@@ -30,7 +30,7 @@ This implementation plan breaks down the bus ticket booking website into increme
   - Test migrations on local PostgreSQL instance
   - _Requirements: All requirements (data foundation)_
 
-- [-] 3. Implement core domain models and entities
+- [x] 3. Implement core domain models and entities
   - Create JPA entities for City, Bus, Route, Trip, User, Booking, Payment, Refund, TripRating
   - Add proper annotations (@Entity, @Table, @Column, @Id, @GeneratedValue)
   - Define enums (BusType, UserRole, BookingStatus, PaymentStatus, SeatStatus)
@@ -39,7 +39,7 @@ This implementation plan breaks down the bus ticket booking website into increme
   - _Requirements: All requirements (data models)_
 
 - [ ] 4. Implement authentication and authorization
-  - [~] 4.1 Create User entity and repository
+  - [-] 4.1 Create User entity and repository
     - Implement UserRepository with Spring Data JPA
     - Add methods for findByEmail, existsByEmail
     - _Requirements: 5.1, 5.2_
