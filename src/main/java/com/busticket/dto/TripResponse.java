@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class TripResponse {
-    
+
     private String id;
     private String busId;
     private String busCompany;
@@ -25,6 +25,28 @@ public class TripResponse {
     private BigDecimal rating;
 
     public TripResponse() {
+    }
+
+    public TripResponse(String id, String busId, String busCompany, String busNumber,
+            String departureCity, String destinationCity, LocalDateTime departureTime,
+            LocalDateTime arrivalTime, Long durationMinutes, Integer availableSeats,
+            Integer totalSeats, BigDecimal price, BusType busType,
+            List<String> amenities, BigDecimal rating) {
+        this.id = id;
+        this.busId = busId;
+        this.busCompany = busCompany;
+        this.busNumber = busNumber;
+        this.departureCity = departureCity;
+        this.destinationCity = destinationCity;
+        this.departureTime = departureTime;
+        this.arrivalTime = arrivalTime;
+        this.durationMinutes = durationMinutes;
+        this.availableSeats = availableSeats;
+        this.totalSeats = totalSeats;
+        this.price = price;
+        this.busType = busType;
+        this.amenities = amenities;
+        this.rating = rating;
     }
 
     // Getters and Setters
@@ -146,5 +168,9 @@ public class TripResponse {
 
     public void setRating(BigDecimal rating) {
         this.rating = rating;
+    }
+
+    public java.time.Duration getDuration() {
+        return durationMinutes != null ? java.time.Duration.ofMinutes(durationMinutes) : null;
     }
 }

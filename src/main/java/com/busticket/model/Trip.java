@@ -12,46 +12,53 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "trips")
 public class Trip {
-    
+
     @Id
     @Column(length = 36)
     private String id;
-    
+
     @NotNull
     @Column(name = "route_id", nullable = false, length = 36)
     private String routeId;
-    
+
     @NotNull
     @Column(name = "bus_id", nullable = false, length = 36)
     private String busId;
-    
+
     @NotNull
     @Column(name = "departure_time", nullable = false)
     private LocalDateTime departureTime;
-    
+
     @NotNull
     @Column(name = "arrival_time", nullable = false)
     private LocalDateTime arrivalTime;
-    
+
     @NotNull
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
-    
+
     @Column(name = "is_open", nullable = false)
     private Boolean isOpen = true;
-    
+
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "operating_days", columnDefinition = "jsonb")
     private String operatingDays;
-    
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Transient
+    private String departureCity;
+
+    @Transient
+    private String destinationCity;
+
     public Trip() {
     }
 
-    public Trip(String id, String routeId, String busId, LocalDateTime departureTime, LocalDateTime arrivalTime, BigDecimal price) {
+    public Trip(String id, String routeId, String busId, LocalDateTime departureTime, LocalDateTime arrivalTime,
+            BigDecimal price) {
         this.id = id;
         this.routeId = routeId;
         this.busId = busId;
@@ -131,5 +138,21 @@ public class Trip {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getDepartureCity() {
+        return departureCity;
+    }
+
+    public void setDepartureCity(String departureCity) {
+        this.departureCity = departureCity;
+    }
+
+    public String getDestinationCity() {
+        return destinationCity;
+    }
+
+    public void setDestinationCity(String destinationCity) {
+        this.destinationCity = destinationCity;
     }
 }

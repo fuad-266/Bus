@@ -10,37 +10,40 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "refunds")
 public class Refund {
-    
+
     @Id
     @Column(length = 36)
     private String id;
-    
+
     @NotNull
     @Column(name = "payment_id", nullable = false, length = 36)
     private String paymentId;
-    
+
     @NotNull
     @Column(name = "booking_id", nullable = false, length = 36)
     private String bookingId;
-    
+
     @NotNull
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
-    
+
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private RefundStatus status;
-    
+
     @Column(columnDefinition = "TEXT")
     private String reason;
-    
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
-    
+
     @Column(name = "completed_at")
     private LocalDateTime completedAt;
+
+    @Column(name = "transaction_id", length = 100)
+    private String transactionId;
 
     public Refund() {
     }
@@ -116,5 +119,13 @@ public class Refund {
 
     public void setCompletedAt(LocalDateTime completedAt) {
         this.completedAt = completedAt;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
     }
 }

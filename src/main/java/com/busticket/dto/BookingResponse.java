@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class BookingResponse {
-    
+
     private String id;
     private String pnr;
     private String tripId;
@@ -21,6 +21,10 @@ public class BookingResponse {
     private String paymentId;
     private LocalDateTime createdAt;
     private LocalDateTime confirmedAt;
+    private String departureCity;
+    private String destinationCity;
+    private LocalDateTime departureTime;
+    private LocalDateTime arrivalTime;
 
     public BookingResponse() {
     }
@@ -128,5 +132,37 @@ public class BookingResponse {
 
     public void setConfirmedAt(LocalDateTime confirmedAt) {
         this.confirmedAt = confirmedAt;
+    }
+
+    public String getDepartureCity() {
+        return departureCity;
+    }
+
+    public void setDepartureCity(String departureCity) {
+        this.departureCity = departureCity;
+    }
+
+    public String getDestinationCity() {
+        return destinationCity;
+    }
+
+    public void setDestinationCity(String destinationCity) {
+        this.destinationCity = destinationCity;
+    }
+
+    public LocalDateTime getDepartureTime() {
+        return departureTime;
+    }
+
+    public void setDepartureTime(LocalDateTime departureTime) {
+        this.departureTime = departureTime;
+    }
+
+    public LocalDateTime getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void setArrivalTime(LocalDateTime arrivalTime) {
+        this.arrivalTime = arrivalTime;
     }
 }

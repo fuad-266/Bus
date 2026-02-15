@@ -31,10 +31,10 @@ public class SearchService {
     private final ObjectMapper objectMapper;
 
     public SearchService(CityRepository cityRepository,
-                        BusRepository busRepository,
-                        RouteRepository routeRepository,
-                        TripRepository tripRepository,
-                        ObjectMapper objectMapper) {
+            BusRepository busRepository,
+            RouteRepository routeRepository,
+            TripRepository tripRepository,
+            ObjectMapper objectMapper) {
         this.cityRepository = cityRepository;
         this.busRepository = busRepository;
         this.routeRepository = routeRepository;
@@ -43,7 +43,8 @@ public class SearchService {
     }
 
     /**
-     * Search for trips based on departure city, destination city, date, and filters.
+     * Search for trips based on departure city, destination city, date, and
+     * filters.
      * 
      * @param request the search request containing search criteria
      * @return a list of trip responses matching the criteria
@@ -60,8 +61,7 @@ public class SearchService {
         // Find routes between cities
         List<Route> routes = routeRepository.findByDepartureCityIdAndDestinationCityId(
                 departureCity.get().getId(),
-                destinationCity.get().getId()
-        );
+                destinationCity.get().getId());
 
         if (routes.isEmpty()) {
             return new ArrayList<>();
@@ -80,8 +80,7 @@ public class SearchService {
                     request.getDepartureTimeEnd(),
                     request.getBusTypes(),
                     request.getMinAvailableSeats(),
-                    request.getBusOperators()
-            );
+                    request.getBusOperators());
             allTrips.addAll(routeTrips);
         }
 
@@ -138,7 +137,7 @@ public class SearchService {
     /**
      * Filter trips by bus operator name.
      * 
-     * @param trips the list of trips to filter
+     * @param trips        the list of trips to filter
      * @param operatorName the bus operator name
      * @return filtered list of trips
      */
@@ -255,7 +254,7 @@ public class SearchService {
                 destinationCity.get().getName(),
                 trip.getDepartureTime(),
                 trip.getArrivalTime(),
-                duration,
+                duration.toMinutes(),
                 availableSeats,
                 bus.get().getTotalSeats(),
                 trip.getPrice(),
@@ -277,7 +276,8 @@ public class SearchService {
         }
 
         try {
-            return objectMapper.readValue(amenitiesJson, new TypeReference<List<String>>() {});
+            return objectMapper.readValue(amenitiesJson, new TypeReference<List<String>>() {
+            });
         } catch (JsonProcessingException e) {
             // Log error and return empty list
             return new ArrayList<>();
@@ -287,7 +287,7 @@ public class SearchService {
     /**
      * Apply sorting to trip responses based on sort option.
      * 
-     * @param trips the list of trips to sort
+     * @param trips  the list of trips to sort
      * @param sortBy the sort option
      */
     private void applySorting(List<TripResponse> trips, String sortBy) {

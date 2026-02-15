@@ -5,6 +5,7 @@ import com.busticket.model.BookingStatus;
 import com.busticket.model.Trip;
 import com.busticket.repository.BookingRepository;
 import com.busticket.repository.BusRepository;
+import com.busticket.repository.TripRepository;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
@@ -40,11 +41,15 @@ public class TicketService {
 
     private final BookingRepository bookingRepository;
     private final BusRepository busRepository;
+    private final TripRepository tripRepository;
 
     @Autowired
-    public TicketService(BookingRepository bookingRepository, BusRepository busRepository) {
+    public TicketService(BookingRepository bookingRepository,
+            BusRepository busRepository,
+            TripRepository tripRepository) {
         this.bookingRepository = bookingRepository;
         this.busRepository = busRepository;
+        this.tripRepository = tripRepository;
     }
 
     /**
@@ -60,7 +65,7 @@ public class TicketService {
             throw new IllegalStateException("Cannot generate ticket for non-confirmed booking");
         }
 
-        Trip trip = busRepository.findTripById(booking.getTripId())
+        Trip trip = tripRepository.findById(booking.getTripId())
                 .orElseThrow(() -> new IllegalArgumentException("Trip not found: " + booking.getTripId()));
 
         // Generate QR code
@@ -72,8 +77,7 @@ public class TicketService {
                 booking,
                 trip,
                 qrCodeBase64,
-                LocalDateTime.now()
-        );
+                LocalDateTime.now());
 
         logger.info("Ticket generated successfully for PNR: {}", booking.getPnr());
         return ticket;
@@ -124,7 +128,8 @@ public class TicketService {
             document.add(new Paragraph("\nTRIP DETAILS").setFontSize(14).setBold());
             document.add(new Paragraph("From: " + ticket.getTrip().getDepartureCity()));
             document.add(new Paragraph("To: " + ticket.getTrip().getDestinationCity()));
-            document.add(new Paragraph("Departure: " + ticket.getTrip().getDepartureTime().format(DATE_TIME_FORMATTER)));
+            document.add(
+                    new Paragraph("Departure: " + ticket.getTrip().getDepartureTime().format(DATE_TIME_FORMATTER)));
             document.add(new Paragraph("Arrival: " + ticket.getTrip().getArrivalTime().format(DATE_TIME_FORMATTER)));
 
             // Seat details
@@ -165,7 +170,7 @@ public class TicketService {
                     .setFontSize(10));
 
             document.close();
-            
+
             logger.info("PDF generated successfully for PNR: {}", ticket.getPnr());
             return baos.toByteArray();
 
@@ -185,8 +190,7 @@ public class TicketService {
                 trip.getId(),
                 booking.getSeatNumbers(),
                 booking.getSeatNumbers().split(",").length,
-                booking.getTotalAmount()
-        );
+                booking.getTotalAmount());
     }
 
     private String generateQRCode(String data) {
@@ -225,10 +229,24 @@ public class TicketService {
             this.generatedAt = generatedAt;
         }
 
-        public String getPnr() { return pnr; }
-        public Booking getBooking() { return booking; }
-        public Trip getTrip() { return trip; }
-        public String getQrCode() { return qrCode; }
-        public LocalDateTime getGeneratedAt() { return generatedAt; }
+        public String getPnr() {
+            return pnr;
+        }
+
+        public Booking getBooking() {
+            return booking;
+        }
+
+        public Trip getTrip() {
+            return trip;
+        }
+
+        public String getQrCode() {
+            return qrCode;
+        }
+
+        public LocalDateTime getGeneratedAt() {
+            return generatedAt;
+        }
     }
 }
