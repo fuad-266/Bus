@@ -198,7 +198,7 @@ This implementation plan breaks down the bus ticket booking website into increme
     - _Requirements: 6.3, 6.5_
 
 - [ ] 12. Implement ticket generation service
-  - [-] 12.1 Create TicketService
+  - [x] 12.1 Create TicketService
     - Implement generateTicket method
     - Implement getTicket method
     - Implement generatePDF method using iText or Apache PDFBox
