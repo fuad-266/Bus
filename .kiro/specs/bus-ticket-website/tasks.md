@@ -38,7 +38,7 @@ This implementation plan breaks down the bus ticket booking website into increme
   - Create DTOs for API requests and responses
   - _Requirements: All requirements (data models)_
 
-- [ ] 4. Implement authentication and authorization
+- [x] 4. Implement authentication and authorization
   - [x] 4.1 Create User entity and repository
     - Implement UserRepository with Spring Data JPA
     - Add methods for findByEmail, existsByEmail
@@ -63,13 +63,13 @@ This implementation plan breaks down the bus ticket booking website into increme
     - Test password reset flow
     - _Requirements: 5.1, 5.2, 5.3_
 
-- [ ] 5. Implement search and discovery service
+- [x] 5. Implement search and discovery service
   - [x] 5.1 Create City, Bus, Route, Trip repositories
     - Implement repositories with Spring Data JPA
     - Add custom query methods for search
     - _Requirements: 1.1, 1.2, 1.3_
   
-  - [-] 5.2 Implement SearchService
+  - [x] 5.2 Implement SearchService
     - Create searchTrips method with filtering and sorting
     - Implement getCitySuggestions with prefix matching
     - Implement getBusDetails method
@@ -96,11 +96,11 @@ This implementation plan breaks down the bus ticket booking website into increme
     - Test search with all filters combined
     - _Requirements: 1.1-1.11, 15.1_
 
-- [ ] 6. Checkpoint - Ensure search functionality works
+- [x] 6. Checkpoint - Ensure search functionality works
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 7. Implement seat lock manager with Redis
-  - [ ] 7.1 Create SeatLockManager service
+  - [x] 7.1 Create SeatLockManager service
     - Implement acquireLock method with Redis SETNX
     - Implement releaseLock method
     - Implement isLocked method
@@ -121,7 +121,7 @@ This implementation plan breaks down the bus ticket booking website into increme
     - _Requirements: 3.3, 3.5_
 
 - [ ] 8. Implement seat selection service
-  - [ ] 8.1 Create SeatSelectionService
+  - [x] 8.1 Create SeatSelectionService
     - Implement getSeatLayout method
     - Implement selectSeat method with lock acquisition
     - Implement deselectSeat method with lock release
@@ -146,7 +146,7 @@ This implementation plan breaks down the bus ticket booking website into increme
     - _Requirements: 2.7, 2.9_
 
 - [ ] 9. Implement booking service
-  - [ ] 9.1 Create BookingService
+  - [x] 9.1 Create BookingService
     - Implement createBooking method with validation
     - Implement confirmBooking method
     - Implement cancelBooking method
