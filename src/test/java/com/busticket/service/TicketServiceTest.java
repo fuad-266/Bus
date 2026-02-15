@@ -5,6 +5,7 @@ import com.busticket.model.BookingStatus;
 import com.busticket.model.Trip;
 import com.busticket.repository.BookingRepository;
 import com.busticket.repository.BusRepository;
+import com.busticket.repository.TripRepository;
 import com.busticket.service.TicketService.Ticket;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,9 @@ class TicketServiceTest {
 
     @Mock
     private BusRepository busRepository;
+
+    @Mock
+    private TripRepository tripRepository;
 
     @InjectMocks
     private TicketService ticketService;
@@ -63,7 +67,7 @@ class TicketServiceTest {
     void generateTicket_ShouldSucceedForConfirmedBooking() {
         // Given
         when(bookingRepository.findById("booking-1")).thenReturn(Optional.of(mockBooking));
-        when(busRepository.findTripById("trip-1")).thenReturn(Optional.of(mockTrip));
+        when(tripRepository.findById("trip-1")).thenReturn(Optional.of(mockTrip));
 
         // When
         Ticket ticket = ticketService.generateTicket("booking-1");
@@ -89,7 +93,7 @@ class TicketServiceTest {
             ticketService.generateTicket("invalid-booking");
         });
 
-        verify(busRepository, never()).findTripById(anyString());
+        verify(tripRepository, never()).findById(anyString());
     }
 
     @Test
@@ -103,14 +107,14 @@ class TicketServiceTest {
             ticketService.generateTicket("booking-1");
         });
 
-        verify(busRepository, never()).findTripById(anyString());
+        verify(tripRepository, never()).findById(anyString());
     }
 
     @Test
     void generateTicket_ShouldFailForNonExistentTrip() {
         // Given
         when(bookingRepository.findById("booking-1")).thenReturn(Optional.of(mockBooking));
-        when(busRepository.findTripById("trip-1")).thenReturn(Optional.empty());
+        when(tripRepository.findById("trip-1")).thenReturn(Optional.empty());
 
         // When & Then
         assertThrows(IllegalArgumentException.class, () -> {
@@ -122,7 +126,7 @@ class TicketServiceTest {
     void getTicket_ShouldSucceedWithValidPNR() {
         // Given
         when(bookingRepository.findByPnr("ABC1234567")).thenReturn(Optional.of(mockBooking));
-        when(busRepository.findTripById("trip-1")).thenReturn(Optional.of(mockTrip));
+        when(tripRepository.findById("trip-1")).thenReturn(Optional.of(mockTrip));
 
         // When
         Ticket ticket = ticketService.getTicket("ABC1234567");
@@ -145,7 +149,7 @@ class TicketServiceTest {
             ticketService.getTicket("INVALID123");
         });
 
-        verify(busRepository, never()).findTripById(anyString());
+        verify(tripRepository, never()).findById(anyString());
     }
 
     @Test
@@ -159,15 +163,15 @@ class TicketServiceTest {
             ticketService.getTicket("ABC1234567");
         });
 
-        verify(busRepository, never()).findTripById(anyString());
+        verify(tripRepository, never()).findById(anyString());
     }
 
     @Test
     void generatePDF_ShouldSucceedWithValidTicket() {
         // Given
         when(bookingRepository.findById("booking-1")).thenReturn(Optional.of(mockBooking));
-        when(busRepository.findTripById("trip-1")).thenReturn(Optional.of(mockTrip));
-        
+        when(tripRepository.findById("trip-1")).thenReturn(Optional.of(mockTrip));
+
         Ticket ticket = ticketService.generateTicket("booking-1");
 
         // When
@@ -176,7 +180,7 @@ class TicketServiceTest {
         // Then
         assertNotNull(pdfBytes);
         assertTrue(pdfBytes.length > 0);
-        
+
         // Check PDF header (PDF files start with %PDF)
         String pdfHeader = new String(pdfBytes, 0, Math.min(4, pdfBytes.length));
         assertEquals("%PDF", pdfHeader);
@@ -186,16 +190,15 @@ class TicketServiceTest {
     void generatePDF_ShouldHandleTicketWithoutQRCode() {
         // Given
         when(bookingRepository.findById("booking-1")).thenReturn(Optional.of(mockBooking));
-        when(busRepository.findTripById("trip-1")).thenReturn(Optional.of(mockTrip));
-        
+        when(tripRepository.findById("trip-1")).thenReturn(Optional.of(mockTrip));
+
         // Create ticket manually without QR code
         Ticket ticket = new Ticket(
                 mockBooking.getPnr(),
                 mockBooking,
                 mockTrip,
                 null, // No QR code
-                LocalDateTime.now()
-        );
+                LocalDateTime.now());
 
         // When
         byte[] pdfBytes = ticketService.generatePDF(ticket);
@@ -203,7 +206,7 @@ class TicketServiceTest {
         // Then
         assertNotNull(pdfBytes);
         assertTrue(pdfBytes.length > 0);
-        
+
         // Check PDF header
         String pdfHeader = new String(pdfBytes, 0, Math.min(4, pdfBytes.length));
         assertEquals("%PDF", pdfHeader);
@@ -213,7 +216,7 @@ class TicketServiceTest {
     void ticket_ShouldHaveCorrectProperties() {
         // Given
         LocalDateTime generatedAt = LocalDateTime.now();
-        
+
         // When
         Ticket ticket = new Ticket("ABC1234567", mockBooking, mockTrip, "qr-code-data", generatedAt);
 

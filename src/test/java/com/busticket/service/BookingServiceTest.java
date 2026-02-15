@@ -8,6 +8,7 @@ import com.busticket.model.BookingStatus;
 import com.busticket.model.Trip;
 import com.busticket.repository.BookingRepository;
 import com.busticket.repository.BusRepository;
+import com.busticket.repository.TripRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,6 +36,9 @@ class BookingServiceTest {
 
     @Mock
     private BusRepository busRepository;
+
+    @Mock
+    private TripRepository tripRepository;
 
     @Mock
     private SeatLockManager seatLockManager;
@@ -90,9 +94,9 @@ class BookingServiceTest {
         when(valueOperations.get("lock:lock-123")).thenReturn("valid-lock");
         when(seatLockManager.isLocked("trip-1", "A1")).thenReturn(true);
         when(seatLockManager.isLocked("trip-1", "A2")).thenReturn(true);
-        when(busRepository.findTripById("trip-1")).thenReturn(Optional.of(mockTrip));
+        when(tripRepository.findById("trip-1")).thenReturn(Optional.of(mockTrip));
         when(bookingRepository.existsByPnr(anyString())).thenReturn(false);
-        
+
         Booking savedBooking = new Booking();
         savedBooking.setId("booking-1");
         savedBooking.setPnr("ABC1234567");
@@ -104,7 +108,7 @@ class BookingServiceTest {
         savedBooking.setServiceFee(new BigDecimal("50.00"));
         savedBooking.setStatus(BookingStatus.PENDING);
         savedBooking.setCreatedAt(LocalDateTime.now());
-        
+
         when(bookingRepository.save(any(Booking.class))).thenReturn(savedBooking);
 
         // When
@@ -121,7 +125,7 @@ class BookingServiceTest {
         assertEquals(new BigDecimal("180.00"), response.getTaxes());
         assertEquals(new BigDecimal("50.00"), response.getServiceFee());
         assertEquals("PENDING", response.getStatus());
-        
+
         verify(bookingRepository).save(any(Booking.class));
         verify(valueOperations).set(eq("lock_booking:lock-123"), anyString(), eq(15L), any());
     }
@@ -135,7 +139,7 @@ class BookingServiceTest {
         assertThrows(IllegalStateException.class, () -> {
             bookingService.createBooking(mockBookingRequest);
         });
-        
+
         verify(bookingRepository, never()).save(any(Booking.class));
     }
 
@@ -145,7 +149,7 @@ class BookingServiceTest {
         when(valueOperations.get("lock:lock-123")).thenReturn("valid-lock");
         when(seatLockManager.isLocked("trip-1", "A1")).thenReturn(true);
         when(seatLockManager.isLocked("trip-1", "A2")).thenReturn(true);
-        
+
         // Remove one passenger to create mismatch
         mockBookingRequest.setPassengers(Arrays.asList(mockPassengers.get(0)));
 
@@ -153,7 +157,7 @@ class BookingServiceTest {
         assertThrows(IllegalArgumentException.class, () -> {
             bookingService.createBooking(mockBookingRequest);
         });
-        
+
         verify(bookingRepository, never()).save(any(Booking.class));
     }
 
@@ -163,13 +167,13 @@ class BookingServiceTest {
         when(valueOperations.get("lock:lock-123")).thenReturn("valid-lock");
         when(seatLockManager.isLocked("trip-1", "A1")).thenReturn(true);
         when(seatLockManager.isLocked("trip-1", "A2")).thenReturn(true);
-        when(busRepository.findTripById("trip-1")).thenReturn(Optional.empty());
+        when(tripRepository.findById("trip-1")).thenReturn(Optional.empty());
 
         // When & Then
         assertThrows(IllegalArgumentException.class, () -> {
             bookingService.createBooking(mockBookingRequest);
         });
-        
+
         verify(bookingRepository, never()).save(any(Booking.class));
     }
 
@@ -182,10 +186,10 @@ class BookingServiceTest {
         booking.setTripId("trip-1");
         booking.setStatus(BookingStatus.PENDING);
         booking.setTotalAmount(new BigDecimal("1230.00"));
-        
+
         when(bookingRepository.findById("booking-1")).thenReturn(Optional.of(booking));
-        when(busRepository.findTripById("trip-1")).thenReturn(Optional.of(mockTrip));
-        
+        when(tripRepository.findById("trip-1")).thenReturn(Optional.of(mockTrip));
+
         Booking confirmedBooking = new Booking();
         confirmedBooking.setId("booking-1");
         confirmedBooking.setPnr("ABC1234567");
@@ -194,7 +198,7 @@ class BookingServiceTest {
         confirmedBooking.setPaymentId("payment-1");
         confirmedBooking.setConfirmedAt(LocalDateTime.now());
         confirmedBooking.setTotalAmount(new BigDecimal("1230.00"));
-        
+
         when(bookingRepository.save(any(Booking.class))).thenReturn(confirmedBooking);
 
         // When
@@ -205,7 +209,7 @@ class BookingServiceTest {
         assertEquals("booking-1", response.getId());
         assertEquals("CONFIRMED", response.getStatus());
         assertNotNull(response.getConfirmedAt());
-        
+
         verify(bookingRepository).save(any(Booking.class));
     }
 
@@ -215,14 +219,14 @@ class BookingServiceTest {
         Booking booking = new Booking();
         booking.setId("booking-1");
         booking.setStatus(BookingStatus.CONFIRMED);
-        
+
         when(bookingRepository.findById("booking-1")).thenReturn(Optional.of(booking));
 
         // When & Then
         assertThrows(IllegalStateException.class, () -> {
             bookingService.confirmBooking("booking-1", "payment-1");
         });
-        
+
         verify(bookingRepository, never()).save(any(Booking.class));
     }
 
@@ -234,7 +238,7 @@ class BookingServiceTest {
         booking.setPnr("ABC1234567");
         booking.setUserId("user-1");
         booking.setStatus(BookingStatus.PENDING);
-        
+
         when(bookingRepository.findById("booking-1")).thenReturn(Optional.of(booking));
         when(bookingRepository.save(any(Booking.class))).thenReturn(booking);
 
@@ -254,14 +258,14 @@ class BookingServiceTest {
         booking.setId("booking-1");
         booking.setUserId("user-1");
         booking.setStatus(BookingStatus.PENDING);
-        
+
         when(bookingRepository.findById("booking-1")).thenReturn(Optional.of(booking));
 
         // When & Then
         assertThrows(IllegalArgumentException.class, () -> {
             bookingService.cancelBooking("booking-1", "user-2");
         });
-        
+
         verify(bookingRepository, never()).save(any(Booking.class));
     }
 
@@ -276,9 +280,9 @@ class BookingServiceTest {
         booking.setSeatNumbers("A1,A2");
         booking.setTotalAmount(new BigDecimal("1230.00"));
         booking.setStatus(BookingStatus.CONFIRMED);
-        
+
         when(bookingRepository.findById("booking-1")).thenReturn(Optional.of(booking));
-        when(busRepository.findTripById("trip-1")).thenReturn(Optional.of(mockTrip));
+        when(tripRepository.findById("trip-1")).thenReturn(Optional.of(mockTrip));
 
         // When
         BookingResponse response = bookingService.getBooking("booking-1");
@@ -303,9 +307,9 @@ class BookingServiceTest {
         booking.setSeatNumbers("A1,A2");
         booking.setTotalAmount(new BigDecimal("1230.00"));
         booking.setStatus(BookingStatus.CONFIRMED);
-        
+
         when(bookingRepository.findByPnr("ABC1234567")).thenReturn(Optional.of(booking));
-        when(busRepository.findTripById("trip-1")).thenReturn(Optional.of(mockTrip));
+        when(tripRepository.findById("trip-1")).thenReturn(Optional.of(mockTrip));
 
         // When
         BookingResponse response = bookingService.getBookingByPnr("ABC1234567");
@@ -329,7 +333,7 @@ class BookingServiceTest {
         booking1.setSeatNumbers("A1");
         booking1.setTotalAmount(new BigDecimal("615.00"));
         booking1.setStatus(BookingStatus.CONFIRMED);
-        
+
         Booking booking2 = new Booking();
         booking2.setId("booking-2");
         booking2.setPnr("XYZ9876543");
@@ -338,10 +342,10 @@ class BookingServiceTest {
         booking2.setSeatNumbers("A2");
         booking2.setTotalAmount(new BigDecimal("615.00"));
         booking2.setStatus(BookingStatus.PENDING);
-        
+
         when(bookingRepository.findByUserIdOrderByCreatedAtDesc("user-1"))
                 .thenReturn(Arrays.asList(booking1, booking2));
-        when(busRepository.findTripById("trip-1")).thenReturn(Optional.of(mockTrip));
+        when(tripRepository.findById("trip-1")).thenReturn(Optional.of(mockTrip));
 
         // When
         List<BookingResponse> responses = bookingService.getUserBookings("user-1");

@@ -27,9 +27,9 @@ public class SeatSelectionService {
     private final ObjectMapper objectMapper;
 
     public SeatSelectionService(BusRepository busRepository,
-                               TripRepository tripRepository,
-                               SeatLockManager seatLockManager,
-                               ObjectMapper objectMapper) {
+            TripRepository tripRepository,
+            SeatLockManager seatLockManager,
+            ObjectMapper objectMapper) {
         this.busRepository = busRepository;
         this.tripRepository = tripRepository;
         this.seatLockManager = seatLockManager;
@@ -57,19 +57,18 @@ public class SeatSelectionService {
 
         // Parse seat layout from bus configuration
         SeatLayoutConfig layoutConfig = parseSeatLayout(bus.get().getSeatLayout());
-        
+
         // Build seat layout with current statuses
         List<Seat> seats = new ArrayList<>();
         for (SeatConfig seatConfig : layoutConfig.getSeats()) {
             SeatStatus status = determineSeatStatus(tripId, seatConfig.getNumber());
-            
+
             Seat seat = new Seat(
                     seatConfig.getNumber(),
                     seatConfig.getRow(),
                     seatConfig.getColumn(),
                     status,
-                    trip.get().getPrice()
-            );
+                    trip.get().getPrice());
             seats.add(seat);
         }
 
@@ -79,9 +78,9 @@ public class SeatSelectionService {
     /**
      * Select a seat and acquire a lock.
      * 
-     * @param tripId the trip ID
+     * @param tripId     the trip ID
      * @param seatNumber the seat number to select
-     * @param userId the user ID selecting the seat
+     * @param userId     the user ID selecting the seat
      * @return SeatSelection result with lock information
      */
     @Transactional
@@ -107,9 +106,9 @@ public class SeatSelectionService {
     /**
      * Select multiple seats and acquire locks.
      * 
-     * @param tripId the trip ID
+     * @param tripId      the trip ID
      * @param seatNumbers the list of seat numbers to select
-     * @param userId the user ID selecting the seats
+     * @param userId      the user ID selecting the seats
      * @return SeatSelection result with lock information
      */
     @Transactional
@@ -137,16 +136,16 @@ public class SeatSelectionService {
     /**
      * Deselect a seat and release its lock.
      * 
-     * @param tripId the trip ID
+     * @param tripId     the trip ID
      * @param seatNumber the seat number to deselect
-     * @param userId the user ID deselecting the seat
+     * @param userId     the user ID deselecting the seat
      */
     @Transactional
     public void deselectSeat(String tripId, String seatNumber, String userId) {
         // Find the lock for this seat
         // Note: This is a simplified implementation
         // In a production system, you might need to track user-to-lock mappings
-        
+
         // For now, we'll assume the user knows their lock ID
         // This method signature might need to be updated to include lockId
         throw new UnsupportedOperationException("deselectSeat requires lockId - use deselectSeatByLockId instead");
@@ -166,7 +165,7 @@ public class SeatSelectionService {
     /**
      * Calculate the total price for selected seats.
      * 
-     * @param tripId the trip ID
+     * @param tripId      the trip ID
      * @param seatNumbers the list of selected seat numbers
      * @return the total price for all selected seats
      */
@@ -182,7 +181,7 @@ public class SeatSelectionService {
     /**
      * Get fare summary for selected seats.
      * 
-     * @param tripId the trip ID
+     * @param tripId      the trip ID
      * @param seatNumbers the list of selected seat numbers
      * @return fare summary with breakdown
      */
@@ -194,7 +193,7 @@ public class SeatSelectionService {
 
         BigDecimal basePrice = trip.get().getPrice();
         int seatCount = seatNumbers.size();
-        
+
         BigDecimal baseFare = basePrice.multiply(BigDecimal.valueOf(seatCount));
         BigDecimal taxes = baseFare.multiply(BigDecimal.valueOf(0.05)); // 5% tax
         BigDecimal serviceFee = baseFare.multiply(BigDecimal.valueOf(0.02)); // 2% service fee
@@ -206,7 +205,7 @@ public class SeatSelectionService {
     /**
      * Determine the current status of a seat.
      * 
-     * @param tripId the trip ID
+     * @param tripId     the trip ID
      * @param seatNumber the seat number
      * @return the current seat status
      */
@@ -214,11 +213,11 @@ public class SeatSelectionService {
         if (seatLockManager.isBooked(tripId, seatNumber)) {
             return SeatStatus.BOOKED;
         }
-        
+
         if (seatLockManager.isLocked(tripId, seatNumber)) {
             return SeatStatus.LOCKED;
         }
-        
+
         return SeatStatus.AVAILABLE;
     }
 
@@ -414,7 +413,8 @@ public class SeatSelectionService {
         public FareSummary() {
         }
 
-        public FareSummary(BigDecimal baseFare, BigDecimal taxes, BigDecimal serviceFee, BigDecimal totalAmount, Integer seatCount) {
+        public FareSummary(BigDecimal baseFare, BigDecimal taxes, BigDecimal serviceFee, BigDecimal totalAmount,
+                Integer seatCount) {
             this.baseFare = baseFare;
             this.taxes = taxes;
             this.serviceFee = serviceFee;
@@ -537,11 +537,11 @@ public class SeatSelectionService {
             this.column = column;
         }
     }
-}
 
-/**
- * Seat status enumeration.
- */
-enum SeatStatus {
-    AVAILABLE, SELECTED, BOOKED, LOCKED
+    /**
+     * Seat status enumeration.
+     */
+    public enum SeatStatus {
+        AVAILABLE, SELECTED, BOOKED, LOCKED
+    }
 }

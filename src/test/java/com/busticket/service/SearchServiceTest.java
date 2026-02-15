@@ -91,12 +91,12 @@ class SearchServiceTest {
     void searchTrips_WithValidCities_ShouldReturnTrips() throws Exception {
         // Arrange
         TripSearchRequest request = new TripSearchRequest("Mumbai", "Delhi", LocalDate.now().plusDays(1));
-        
+
         when(cityRepository.findByNameIgnoreCase("Mumbai")).thenReturn(Optional.of(mumbai));
         when(cityRepository.findByNameIgnoreCase("Delhi")).thenReturn(Optional.of(delhi));
         when(routeRepository.findByDepartureCityIdAndDestinationCityId("city-mumbai", "city-delhi"))
                 .thenReturn(Arrays.asList(testRoute));
-        when(tripRepository.searchTrips(anyString(), anyString(), any(LocalDate.class), 
+        when(tripRepository.searchTrips(anyString(), anyString(), any(LocalDate.class),
                 any(), any(), any(), any(), any(), any(), any()))
                 .thenReturn(Arrays.asList(testTrip));
         when(busRepository.findById("bus-123")).thenReturn(Optional.of(testBus));
@@ -104,7 +104,8 @@ class SearchServiceTest {
         when(cityRepository.findById("city-mumbai")).thenReturn(Optional.of(mumbai));
         when(cityRepository.findById("city-delhi")).thenReturn(Optional.of(delhi));
         when(tripRepository.calculateAvailableSeats("trip-123")).thenReturn(35);
-        when(objectMapper.readValue(eq("[\"WiFi\", \"Charging Port\"]"), any(com.fasterxml.jackson.core.type.TypeReference.class)))
+        when(objectMapper.readValue(eq("[\"WiFi\", \"Charging Port\"]"),
+                any(com.fasterxml.jackson.core.type.TypeReference.class)))
                 .thenReturn(Arrays.asList("WiFi", "Charging Port"));
 
         // Act
@@ -113,7 +114,7 @@ class SearchServiceTest {
         // Assert
         assertNotNull(result);
         assertEquals(1, result.size());
-        
+
         TripResponse tripResponse = result.get(0);
         assertEquals("trip-123", tripResponse.getId());
         assertEquals("Test Travels", tripResponse.getBusCompany());
@@ -130,7 +131,7 @@ class SearchServiceTest {
     void searchTrips_WithInvalidDepartureCity_ShouldReturnEmptyList() {
         // Arrange
         TripSearchRequest request = new TripSearchRequest("InvalidCity", "Delhi", LocalDate.now().plusDays(1));
-        
+
         when(cityRepository.findByNameIgnoreCase("InvalidCity")).thenReturn(Optional.empty());
         when(cityRepository.findByNameIgnoreCase("Delhi")).thenReturn(Optional.of(delhi));
 
@@ -146,7 +147,7 @@ class SearchServiceTest {
     void searchTrips_WithInvalidDestinationCity_ShouldReturnEmptyList() {
         // Arrange
         TripSearchRequest request = new TripSearchRequest("Mumbai", "InvalidCity", LocalDate.now().plusDays(1));
-        
+
         when(cityRepository.findByNameIgnoreCase("Mumbai")).thenReturn(Optional.of(mumbai));
         when(cityRepository.findByNameIgnoreCase("InvalidCity")).thenReturn(Optional.empty());
 
@@ -162,7 +163,7 @@ class SearchServiceTest {
     void searchTrips_WithNoRoutes_ShouldReturnEmptyList() {
         // Arrange
         TripSearchRequest request = new TripSearchRequest("Mumbai", "Delhi", LocalDate.now().plusDays(1));
-        
+
         when(cityRepository.findByNameIgnoreCase("Mumbai")).thenReturn(Optional.of(mumbai));
         when(cityRepository.findByNameIgnoreCase("Delhi")).thenReturn(Optional.of(delhi));
         when(routeRepository.findByDepartureCityIdAndDestinationCityId("city-mumbai", "city-delhi"))
@@ -184,7 +185,7 @@ class SearchServiceTest {
         mumbai.setName("Mumbai");
         City mumbaiBandra = new City();
         mumbaiBandra.setName("Mumbai Bandra");
-        
+
         when(cityRepository.findByNameStartsWithIgnoreCaseOrderByName(prefix))
                 .thenReturn(Arrays.asList(mumbai, mumbaiBandra));
 
@@ -279,7 +280,7 @@ class SearchServiceTest {
         TripResponse trip1 = createTripResponse("trip-1", "Test Travels");
         TripResponse trip2 = createTripResponse("trip-2", "Another Travels");
         TripResponse trip3 = createTripResponse("trip-3", "Test Travels");
-        
+
         List<TripResponse> trips = Arrays.asList(trip1, trip2, trip3);
 
         // Act
@@ -296,7 +297,7 @@ class SearchServiceTest {
         // Arrange
         TripResponse trip1 = createTripResponse("trip-1", "Test Travels");
         TripResponse trip2 = createTripResponse("trip-2", "Another Travels");
-        
+
         List<TripResponse> trips = Arrays.asList(trip1, trip2);
 
         // Act
@@ -313,7 +314,7 @@ class SearchServiceTest {
         // Arrange
         TripResponse trip1 = createTripResponse("trip-1", "Test Travels");
         TripResponse trip2 = createTripResponse("trip-2", "Another Travels");
-        
+
         List<TripResponse> trips = Arrays.asList(trip1, trip2);
 
         // Act
@@ -334,7 +335,7 @@ class SearchServiceTest {
         delhi.setName("Delhi");
         City bangalore = new City();
         bangalore.setName("Bangalore");
-        
+
         when(cityRepository.findAvailableDepartureCities())
                 .thenReturn(Arrays.asList(mumbai, delhi, bangalore));
 
@@ -356,7 +357,7 @@ class SearchServiceTest {
         mumbai.setName("Mumbai");
         City delhi = new City();
         delhi.setName("Delhi");
-        
+
         when(cityRepository.findAvailableDestinationCities())
                 .thenReturn(Arrays.asList(mumbai, delhi));
 
@@ -394,7 +395,7 @@ class SearchServiceTest {
         delhi.setName("Delhi");
         City bangalore = new City();
         bangalore.setName("Bangalore");
-        
+
         when(cityRepository.findByNameIgnoreCase(departureCity)).thenReturn(Optional.of(mumbai));
         when(cityRepository.findCitiesReachableFromDeparture("city-mumbai"))
                 .thenReturn(Arrays.asList(delhi, bangalore));
@@ -413,7 +414,7 @@ class SearchServiceTest {
     void getReachableDestinations_WithInvalidCity_ShouldReturnEmptyList() {
         // Arrange
         String departureCity = "InvalidCity";
-        
+
         when(cityRepository.findByNameIgnoreCase(departureCity)).thenReturn(Optional.empty());
 
         // Act
@@ -432,15 +433,14 @@ class SearchServiceTest {
                 "MH01AB1234",
                 "Mumbai",
                 "Delhi",
-                LocalDateTime.now().plusDays(1),
-                LocalDateTime.now().plusDays(1).plusHours(20),
-                Duration.ofHours(20),
+                testTrip.getDepartureTime(),
+                testTrip.getArrivalTime(),
+                1200L,
                 35,
                 40,
                 BigDecimal.valueOf(1500.0),
                 BusType.AC,
                 Arrays.asList("WiFi", "Charging Port"),
-                null
-        );
+                null);
     }
 }
