@@ -64,12 +64,12 @@ This implementation plan breaks down the bus ticket booking website into increme
     - _Requirements: 5.1, 5.2, 5.3_
 
 - [ ] 5. Implement search and discovery service
-  - [ ] 5.1 Create City, Bus, Route, Trip repositories
+  - [x] 5.1 Create City, Bus, Route, Trip repositories
     - Implement repositories with Spring Data JPA
     - Add custom query methods for search
     - _Requirements: 1.1, 1.2, 1.3_
   
-  - [ ] 5.2 Implement SearchService
+  - [-] 5.2 Implement SearchService
     - Create searchTrips method with filtering and sorting
     - Implement getCitySuggestions with prefix matching
     - Implement getBusDetails method
