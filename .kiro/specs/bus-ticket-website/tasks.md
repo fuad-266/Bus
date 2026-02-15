@@ -174,7 +174,7 @@ This implementation plan breaks down the bus ticket booking website into increme
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 11. Implement payment service
-  - [ ] 11.1 Create PaymentService
+  - [x] 11.1 Create PaymentService
     - Implement initiatePayment method
     - Implement processPayment method (with mock payment gateway)
     - Implement getPayment method
@@ -198,7 +198,7 @@ This implementation plan breaks down the bus ticket booking website into increme
     - _Requirements: 6.3, 6.5_
 
 - [ ] 12. Implement ticket generation service
-  - [ ] 12.1 Create TicketService
+  - [-] 12.1 Create TicketService
     - Implement generateTicket method
     - Implement getTicket method
     - Implement generatePDF method using iText or Apache PDFBox
